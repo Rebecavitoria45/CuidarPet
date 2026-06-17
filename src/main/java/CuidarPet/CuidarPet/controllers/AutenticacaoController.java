@@ -43,7 +43,8 @@ public class AutenticacaoController {
         return ResponseEntity.ok(new LoginResponseDTO(
                 tokenJWT,
                 usuario.getNome(),
-                usuario.getRole().name()
+                usuario.getRole().name(),
+                usuario.isAdmin()
         ));
     }
 }

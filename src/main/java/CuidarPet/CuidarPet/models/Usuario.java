@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,10 +44,20 @@ public class Usuario implements UserDetails {
     @Builder.Default
     private boolean ativo = true;
 
+    private boolean admin; // Flag de administrador
+
     // Métodos do UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        // Adiciona a role base
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
+        // Se for admin, adiciona também a autoridade de ADMIN
+        if (this.admin) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+
+        return authorities;
     }
     @Override
     public String getPassword() {
@@ -63,5 +75,6 @@ public class Usuario implements UserDetails {
     public boolean isCredentialsNonExpired() { return true; }
     @Override
     public boolean isEnabled() { return this.ativo; }
+
 
 }

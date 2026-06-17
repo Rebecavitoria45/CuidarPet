@@ -24,6 +24,10 @@ public class UsuarioService {
     // cadastro de usuároos
     @Transactional
     public UsuarioResponseDTO cadastrarUsuario(@Valid UsuarioRequestDTO dto) {
+        if (dto.matricula() == null || !dto.matricula().matches("\\d+")) {
+            throw new RuntimeException("A matrícula deve conter apenas números!");
+        }
+
         if (repository.existsByMatricula(dto.matricula())) {
             throw new RuntimeException("Já existe um usuário cadastrado com esta matrícula!");
         }
@@ -42,6 +46,7 @@ public class UsuarioService {
         usuario.setCrmv(dto.role() == Role.VETERINARIO ? dto.crmv() : null);
         usuario.setSenhaHash(passwordEncoder.encode(dto.senha()));
         usuario.setAtivo(true);
+        usuario.setAdmin(dto.admin());
 
         Usuario usuarioSalvo = repository.save(usuario);
         return converterParaDTO(usuarioSalvo);
@@ -84,6 +89,7 @@ public class UsuarioService {
         usuario.setEmail(dto.email());
         usuario.setRole(dto.role());
         usuario.setCrmv(dto.role() == Role.VETERINARIO ? dto.crmv() : null);
+        usuario.setAdmin(dto.admin());
         return converterParaDTO(repository.save(usuario));
     }
 
@@ -111,13 +117,20 @@ public class UsuarioService {
 
     // conversão do usuario para o dto de response
     private UsuarioResponseDTO converterParaDTO(Usuario u) {
-        return new UsuarioResponseDTO(u.getId(), u.getMatricula(), u.getEmail(), u.getNome(), u.getRole(), u.getCrmv(), u.isAtivo());
+        return new UsuarioResponseDTO(u.getId(), u.getMatricula(), u.getEmail(), u.getNome(), u.getRole(), u.getCrmv(), u.isAtivo(), u.isAdmin());
     }
 
     // Validação do CRMV
     private void validarCrmv(Role role, String crmv) {
         if (role == Role.VETERINARIO && (crmv == null || crmv.isBlank())) {
             throw new RuntimeException("CRMV é obrigatório para veterinários.");
+        } else if (role == Role.VETERINARIO) {
+            String crmvRegex = "^[0-9]{3,7}[/-][A-Z]{2}$";
+
+            if (!crmv.trim().toUpperCase().matches(crmvRegex)) {
+                throw new RuntimeException("Formato de CRMV inválido! Use o padrão: 00000/UF (Ex: 12345/SP)");
+            }
+
         }
     }
 

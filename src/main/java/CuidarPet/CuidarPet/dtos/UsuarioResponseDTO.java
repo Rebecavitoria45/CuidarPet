@@ -9,6 +9,7 @@ public record UsuarioResponseDTO(
         String nome,
         Role role,
         String crmv,
-        Boolean ativo
+        Boolean ativo,
+        Boolean admin
 ) {
 }

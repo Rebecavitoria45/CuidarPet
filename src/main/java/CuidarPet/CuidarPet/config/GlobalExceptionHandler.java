@@ -1,6 +1,7 @@
 package CuidarPet.CuidarPet.config;
 
 import CuidarPet.CuidarPet.dtos.ErroResponseDTO;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,6 +26,20 @@ public class GlobalExceptionHandler {
                 null
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErroResponseDTO> handleDataIntegrity(DataIntegrityViolationException ex) {
+        String cause = ex.getMostSpecificCause().getMessage();
+        String mensagem = "Erro de integridade nos dados enviados.";
+
+        if (cause.contains("Duplicate entry")) {
+            mensagem = "Erro: Já existe um registro com esses dados (E-mail ou CPF duplicado).";
+        } else if (cause.contains("Data too long")) {
+            mensagem = "Erro: Um dos campos informados é longo demais.";
+        }
+
+        return buildErrorResponse(HttpStatus.CONFLICT, mensagem, null);
     }
 
     //Captura erros de Login
@@ -78,5 +93,15 @@ public class GlobalExceptionHandler {
                 null
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+    }
+
+    private ResponseEntity<ErroResponseDTO> buildErrorResponse(HttpStatus status, String mensagem, List<String> detalhes) {
+        ErroResponseDTO erro = new ErroResponseDTO(
+                LocalDateTime.now(),
+                status.value(),
+                mensagem,
+                detalhes
+        );
+        return ResponseEntity.status(status).body(erro);
     }
 }

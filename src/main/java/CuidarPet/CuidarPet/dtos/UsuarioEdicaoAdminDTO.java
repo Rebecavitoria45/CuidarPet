@@ -8,6 +8,7 @@ public record UsuarioEdicaoAdminDTO(
         String email,
         Role role,
         String matricula,
-        String crmv
+        String crmv,
+        Boolean admin
 ) {
 }

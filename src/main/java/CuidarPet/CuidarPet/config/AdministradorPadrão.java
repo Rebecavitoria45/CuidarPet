@@ -40,8 +40,9 @@ public class AdministradorPadrão implements CommandLineRunner {
             admin.setMatricula(adminMatricula);
             admin.setNome(adminNome);
             admin.setEmail(adminEmail);
-            admin.setRole(Role.ADMIN);
+            admin.setRole(Role.ATENDENTE);
             admin.setAtivo(true);
+            admin.setAdmin(true);
 
             // Criptografa a senha vinda do properties
             admin.setSenhaHash(passwordEncoder.encode(adminSenha));

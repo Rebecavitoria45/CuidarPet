@@ -8,10 +8,11 @@ public record PetResponseDTO(
         Long clienteId,
         String corresponsavel,
         float peso,
-        char sexo,
+        String sexo,
         String especie,
         String raca,
-        int idade
+        int idade,
+        String tutorNome
 ){
     public PetResponseDTO(Pet pet){
        this(
@@ -23,7 +24,8 @@ public record PetResponseDTO(
         pet.getSexo(),
         pet.getEspecie(),
         pet.getRaca(),
-        pet.getIdade()
+        pet.getIdade(),
+               pet.getCliente().getNome()
        );
     }
 }

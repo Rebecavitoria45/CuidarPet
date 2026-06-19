@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table (name = "pet")
+@Table (name = "pets")
 public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +23,14 @@ public class Pet {
     @JoinColumn(name = "cliente", nullable = false)
     private Cliente cliente;
 
-    @Column (nullable = false)
+    @Column (nullable = true)
     private String corresponsavel;
 
     @Column (nullable = false)
     private float peso;
 
     @Column (nullable = false)
-    private char sexo;
+    private String sexo;
 
     @Column (nullable = false)
     private  String especie;

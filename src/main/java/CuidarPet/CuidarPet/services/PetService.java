@@ -1,5 +1,6 @@
 package CuidarPet.CuidarPet.services;
 
+import CuidarPet.CuidarPet.dtos.PetEdicaoDTO;
 import CuidarPet.CuidarPet.models.Cliente;
 import CuidarPet.CuidarPet.dtos.PetResponseDTO;
 import CuidarPet.CuidarPet.models.Pet;
@@ -16,12 +17,12 @@ import java.util.List;
 public class PetService {
 
     private final PetRepository petRepository;
-    private final ClienteRepository ClienteRepository;
+    private final ClienteRepository clienteRepository;
 
     //Cadastrar Pet, verificando se o pet está associado ao cliente
     @Transactional
     public PetResponseDTO cadastrarPet(PetRequestDTO dto) {
-        Cliente cliente = ClienteRepository.findById(dto.clienteId())
+        Cliente cliente = clienteRepository.findById(dto.clienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado com o ID fornecido."));
 
         Pet pet = new Pet();
@@ -30,7 +31,12 @@ public class PetService {
         pet.setSexo(dto.sexo());
         pet.setEspecie(dto.especie());
         pet.setRaca(dto.raca());
-
+        pet.setIdade(dto.idade());
+        if (dto.corresponsavel() != null && !dto.corresponsavel().isBlank()) {
+            pet.setCorresponsavel(dto.corresponsavel().trim());
+        } else {
+            pet.setCorresponsavel(null);
+        }
         pet.setCliente(cliente);
 
         Pet petSalvo = petRepository.save(pet);
@@ -38,15 +44,26 @@ public class PetService {
     }
     //Atualizar dados do pet
      @Transactional
-    public PetResponseDTO atualizarPet(Long id, PetRequestDTO dto) {
+    public PetResponseDTO atualizarPet(Long id, PetEdicaoDTO dto) {
         Pet pet = petRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pet não encontrado!"));
 
-        pet.setNome(dto.nome());
-        pet.setPeso(dto.peso());
-        pet.setSexo(dto.sexo());
-        pet.setEspecie(dto.especie());
-        pet.setRaca(dto.raca());
+         Cliente cliente = clienteRepository.findById(dto.clienteId())
+                 .orElseThrow(() -> new RuntimeException("Tutor não encontrado!"));
+
+         pet.setNome(dto.nome());
+         pet.setPeso(dto.peso());
+         pet.setSexo(dto.sexo());
+         pet.setEspecie(dto.especie());
+         pet.setRaca(dto.raca());
+         pet.setIdade(dto.idade());
+         pet.setCliente(cliente);
+
+         if (dto.corresponsavel() != null && !dto.corresponsavel().isBlank()) {
+             pet.setCorresponsavel(dto.corresponsavel().trim());
+         } else {
+             pet.setCorresponsavel(null);
+         }
 
         return converterParaDTO(petRepository.save(pet));
     }

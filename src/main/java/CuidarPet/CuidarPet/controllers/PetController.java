@@ -1,6 +1,7 @@
 package CuidarPet.CuidarPet.controllers;
 
 
+import CuidarPet.CuidarPet.dtos.PetEdicaoDTO;
 import CuidarPet.CuidarPet.services.PetService;
 import CuidarPet.CuidarPet.dtos.PetRequestDTO;
 import CuidarPet.CuidarPet.dtos.PetResponseDTO;
@@ -32,7 +33,7 @@ public class PetController {
         return ResponseEntity.ok(service.buscarPetPorId(id));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<PetResponseDTO> editar(@PathVariable Long id, @RequestBody @Valid PetRequestDTO dto) {
+    public ResponseEntity<PetResponseDTO> editar(@PathVariable Long id, @RequestBody @Valid PetEdicaoDTO dto) {
         return ResponseEntity.ok(service.atualizarPet(id, dto));
     }
     @DeleteMapping("/{id}")

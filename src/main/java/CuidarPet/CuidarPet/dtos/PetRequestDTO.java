@@ -2,6 +2,7 @@ package CuidarPet.CuidarPet.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 public record PetRequestDTO(
     @NotBlank(message = " Campo Nome é obrigatório")
@@ -10,11 +11,12 @@ public record PetRequestDTO(
     @NotNull(message = " Campo Cliente ID é obrigatório")
     Long clienteId,
 
-    @NotBlank(message = " Campo Peso é obrigatório")
+    @NotNull(message = " Campo Peso é obrigatório")
+    @PositiveOrZero(message = "o Peso não pode ser negativa")
     float peso,
 
     @NotBlank(message = "Campo sexo é obrigatório")
-    char sexo,
+    String sexo,
 
     @NotBlank(message = " Campo Espécie é obrigatório")
     String especie,
@@ -22,6 +24,9 @@ public record PetRequestDTO(
     @NotBlank(message = " Campo Raça é obrigatório")
     String raca,
 
-    @NotBlank(message = " Campo Idade é obrigatório")
-    int idade
+    @NotNull(message = " Campo Idade é obrigatório")
+    @PositiveOrZero(message = "A idade não pode ser negativa")
+    int idade,
+
+    String corresponsavel
 ){}

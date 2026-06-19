@@ -110,6 +110,20 @@ public class ClienteService {
         return converterParaDTO(cliente);
     }
 
+    public List<ClienteResponseDTO> buscarClientesPorNome(String nome) {
+        try {
+            // Busca no banco
+            List<Cliente> clientes = repository.findByNomeContainingIgnoreCase(nome);
+
+            // Converte a lista para DTO
+            return clientes.stream()
+                    .map(this::converterParaDTO)
+                    .toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao realizar a busca: " + e.getMessage());
+        }
+    }
+
     private ClienteResponseDTO converterParaDTO(Cliente c) {
         return new ClienteResponseDTO(c);
     }

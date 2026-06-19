@@ -20,7 +20,7 @@ public class Pet {
     private String nome;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "cliente", nullable = false)
+    @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
     @Column (nullable = true)

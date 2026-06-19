@@ -47,4 +47,10 @@ public class ClienteController {
         service.excluirCliente(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ClienteResponseDTO>> buscarPorNome(@RequestParam String nome) {
+        List<ClienteResponseDTO> resultados = service.buscarClientesPorNome(nome);
+        return ResponseEntity.ok(resultados);
+    }
 }

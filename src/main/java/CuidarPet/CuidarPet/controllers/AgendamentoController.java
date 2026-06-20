@@ -1,16 +1,17 @@
 package CuidarPet.CuidarPet.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import CuidarPet.CuidarPet.dtos.AgendamentoEdicaoDTO;
+import CuidarPet.CuidarPet.dtos.AgendamentoEdicaoStatusDTO;
+import CuidarPet.CuidarPet.dtos.AgendamentoRequestDTO;
+import CuidarPet.CuidarPet.dtos.AgendamentoResponseDTO;
+import CuidarPet.CuidarPet.services.AgendamentoService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import CuidarPet.CuidarPet.models.Agendamento;
 import CuidarPet.CuidarPet.models.Pet;
@@ -20,56 +21,59 @@ import CuidarPet.CuidarPet.repositores.PetRepository;
 @RestController
 @RequestMapping("/agendamentos")
 @CrossOrigin("*")
+@RequiredArgsConstructor
 public class AgendamentoController {
 
-    private final AgendamentoRepository agendamentoRepository;
-    private final PetRepository petRepository;
+    private final AgendamentoService service;
 
-    public AgendamentoController(AgendamentoRepository agendamentoRepository, PetRepository petRepository) {
-        this.agendamentoRepository = agendamentoRepository;
-        this.petRepository = petRepository;
+    @PostMapping
+    public ResponseEntity<AgendamentoResponseDTO> agendar(@RequestBody @Valid AgendamentoRequestDTO dto) {
+        return ResponseEntity.ok(service.criarAgendamento(dto));
     }
 
     @GetMapping
-    public List<Agendamento> listarTodos() {
-        return agendamentoRepository.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public Agendamento buscarPorId(@PathVariable Long id) {
-        return agendamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
-    }
-
-    @PostMapping("/pet/{petId}")
-    public Agendamento cadastrar(@PathVariable Long petId, @RequestBody Agendamento agendamento) {
-        Pet pet = petRepository.findById(petId)
-                .orElseThrow(() -> new RuntimeException("Pet não encontrado"));
-
-        agendamento.setPet(pet);
-        return agendamentoRepository.save(agendamento);
+    public ResponseEntity<List<AgendamentoResponseDTO>> listar() {
+        return ResponseEntity.ok(service.listarTodos());
     }
 
     @PutMapping("/{id}")
-    public Agendamento editar(@PathVariable Long id, @RequestBody Agendamento dados) {
-        Agendamento agendamento = agendamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+    public ResponseEntity<AgendamentoResponseDTO> editar(@PathVariable Long id, @RequestBody @Valid AgendamentoEdicaoDTO dto) {
+        return ResponseEntity.ok(service.atualizarAgendamento(id, dto));
+    }
 
-        agendamento.setData(dados.getData());
-        agendamento.setHorario(dados.getHorario());
-        agendamento.setVeterinario(dados.getVeterinario());
-        agendamento.setStatus(dados.getStatus());
-
-        return agendamentoRepository.save(agendamento);
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<AgendamentoResponseDTO> mudarStatus(@PathVariable Long id, @RequestBody @Valid AgendamentoEdicaoStatusDTO dto) {
+        return ResponseEntity.ok(service.alterarStatus(id, dto.status()));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        agendamentoRepository.deleteById(id);
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        service.excluirAgendamento(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/pet/{petId}")
-    public List<Agendamento> listarPorPet(@PathVariable Long petId) {
-        return agendamentoRepository.findByPetId(petId);
+    @GetMapping("/veterinario/{id}")
+    public ResponseEntity<List<AgendamentoResponseDTO>> listarPorVeterinario(@PathVariable Long id) {
+        return ResponseEntity.ok(service.listarPorVeterinario(id));
+    }
+
+    @GetMapping("/pet/{id}")
+    public ResponseEntity<List<AgendamentoResponseDTO>> listarPorPet(@PathVariable Long id) {
+        return ResponseEntity.ok(service.listarPorPet(id));
+    }
+
+    @GetMapping("/data")
+    public ResponseEntity<List<AgendamentoResponseDTO>> listarPorData(
+            @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate data) {
+        return ResponseEntity.ok(service.listarPorData(data));
+    }
+
+    // Exemplo de URL: /agendamentos/agenda?vetId=1&data=2026-06-20
+    @GetMapping("/agenda")
+    public ResponseEntity<List<AgendamentoResponseDTO>> listarAgendaDoDia(
+            @RequestParam Long vetId,
+            @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate data) {
+        return ResponseEntity.ok(service.listarAgendaDoDia(vetId, data));
+
     }
 }

@@ -3,13 +3,7 @@ package CuidarPet.CuidarPet.models;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,12 +22,14 @@ public class Agendamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false)
     private LocalDate data;
-
+    @Column(nullable = false)
     private LocalTime horario;
 
-    private String veterinario;
+    @ManyToOne
+    @JoinColumn(name = "veterinario_id", nullable = false)
+    private Usuario veterinario;
 
     private String status;
 

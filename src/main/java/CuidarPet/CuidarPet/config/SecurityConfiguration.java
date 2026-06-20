@@ -54,6 +54,11 @@ public class SecurityConfiguration {
                                .requestMatchers(HttpMethod.POST, "/pets").hasAnyRole("ADMIN", "ATENDENTE")
                                .requestMatchers(HttpMethod.PUT, "/pets/**").hasAnyRole("ADMIN", "ATENDENTE")
                                .requestMatchers(HttpMethod.DELETE, "/pets/**").hasAnyRole("ADMIN","ATENDENTE")
+                               .requestMatchers(HttpMethod.GET, "/agendamentos/**").hasAnyRole("ADMIN", "ATENDENTE", "VETERINARIO")
+                               .requestMatchers(HttpMethod.POST, "/agendamentos").hasAnyRole("ADMIN", "ATENDENTE")
+                               .requestMatchers(HttpMethod.PUT, "/agendamentos/**").hasAnyRole("ADMIN", "ATENDENTE")
+                              .requestMatchers(HttpMethod.PATCH, "/agendamentos/**").hasAnyRole("ADMIN", "ATENDENTE", "VETERINARIO")
+                              .requestMatchers(HttpMethod.DELETE, "/agendamentos/**").hasAnyRole("ADMIN","ATENDENTE")
 
                                 .anyRequest().authenticated()
 

@@ -11,9 +11,11 @@ public record AgendamentoResponseDTO(
         LocalTime horario,
         String veterinarioNome,
         String petNome,
-        String status
-) {
+        String status,
+        Long petId,
+        Long veterinarioId
+        ) {
     public AgendamentoResponseDTO(Agendamento a) {
         this(a.getId(), a.getData(), a.getHorario(),
-                a.getVeterinario().getNome(), a.getPet().getNome(), a.getStatus());
+                a.getVeterinario().getNome(), a.getPet().getNome(), a.getStatus(),a.getVeterinario().getId(),a.getPet().getId());
 }}

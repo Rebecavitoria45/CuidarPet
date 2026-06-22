@@ -1,6 +1,7 @@
 package CuidarPet.CuidarPet.controllers;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import CuidarPet.CuidarPet.dtos.AgendamentoEdicaoDTO;
@@ -10,6 +11,7 @@ import CuidarPet.CuidarPet.dtos.AgendamentoResponseDTO;
 import CuidarPet.CuidarPet.services.AgendamentoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +48,11 @@ public class AgendamentoController {
         return ResponseEntity.ok(service.alterarStatus(id, dto.status()));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<AgendamentoResponseDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarAgendamentoPorId(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         service.excluirAgendamento(id);
@@ -74,6 +81,18 @@ public class AgendamentoController {
             @RequestParam Long vetId,
             @RequestParam @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate data) {
         return ResponseEntity.ok(service.listarAgendaDoDia(vetId, data));
+    }
 
+    @GetMapping("/horarios-ocupados")
+    public ResponseEntity<List<String>> buscarHorariosOcupados(
+            @RequestParam Long vetId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+        List<LocalTime> horarios = service.listarHorariosOcupados(vetId, data);
+
+        List<String> horariosStr = horarios.stream()
+                .map(h -> h.toString().substring(0, 5))
+                .toList();
+
+        return ResponseEntity.ok(horariosStr);
     }
 }

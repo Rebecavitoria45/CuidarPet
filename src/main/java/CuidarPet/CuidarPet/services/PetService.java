@@ -87,6 +87,13 @@ public class PetService {
                 .orElseThrow(() -> new RuntimeException("Pet não encontrado!"));
         return converterParaDTO(pet);
     }
+
+    public List<PetResponseDTO> buscarPetsPorNome(String nome) {
+        return petRepository.findByNomeContainingIgnoreCase(nome)
+                .stream()
+                .map(PetResponseDTO::new)
+                .toList();
+    }
     private PetResponseDTO converterParaDTO(Pet p) {return new PetResponseDTO(p);
     }
 }

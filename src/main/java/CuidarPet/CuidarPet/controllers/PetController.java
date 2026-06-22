@@ -41,4 +41,9 @@ public class PetController {
         service.excluirPet(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<PetResponseDTO>> buscarPorNome(@RequestParam String nome) {
+        return ResponseEntity.ok(service.buscarPetsPorNome(nome));
+    }
 }

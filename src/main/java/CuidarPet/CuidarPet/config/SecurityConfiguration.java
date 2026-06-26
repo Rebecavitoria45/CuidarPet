@@ -1,6 +1,7 @@
 package CuidarPet.CuidarPet.config;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,7 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -83,7 +84,8 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
 
         //  Define qual endereço do Front-end pode acessar a API
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+       configuration.setAllowedOriginPatterns(List.of("http://localhost:*"));
+
         // Define quais métodos HTTP são permitidos
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         // Define quais cabeçalhos são permitidos

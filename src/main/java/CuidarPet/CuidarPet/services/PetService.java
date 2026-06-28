@@ -94,6 +94,14 @@ public class PetService {
                 .map(PetResponseDTO::new)
                 .toList();
     }
+    public List<PetResponseDTO> listarRecentes() {
+        return petRepository.findTop5ByOrderByIdDesc().stream()
+                .map(PetResponseDTO::new).toList();
+    }
+
+    public long contarTodos() {
+        return petRepository.count();
+    }
     private PetResponseDTO converterParaDTO(Pet p) {return new PetResponseDTO(p);
     }
 }

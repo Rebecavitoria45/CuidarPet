@@ -46,4 +46,14 @@ public class PetController {
     public ResponseEntity<List<PetResponseDTO>> buscarPorNome(@RequestParam String nome) {
         return ResponseEntity.ok(service.buscarPetsPorNome(nome));
     }
+
+    @GetMapping("/recentes")
+    public ResponseEntity<List<PetResponseDTO>> listarRecentes() {
+        return ResponseEntity.ok(service.listarRecentes());
+    }
+
+    @GetMapping("/contar")
+    public ResponseEntity<Long> contar() {
+        return ResponseEntity.ok(service.contarTodos());
+    }
 }

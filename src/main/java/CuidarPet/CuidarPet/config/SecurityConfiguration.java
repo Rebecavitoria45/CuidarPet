@@ -84,7 +84,7 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
 
         //  Define qual endereço do Front-end pode acessar a API
-       configuration.setAllowedOriginPatterns(List.of("http://localhost:*"));
+       configuration.setAllowedOriginPatterns(List.of("http://localhost:5173"));
 
         // Define quais métodos HTTP são permitidos
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));

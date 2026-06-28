@@ -39,6 +39,10 @@ public class AgendamentoService {
             throw new RuntimeException("O usuário selecionado não é um médico veterinário.");
         }
 
+        if (!veterinario.isEnabled()) { // ou isEnabled() dependendo do seu UserDetails
+            throw new RuntimeException("Não é permitido agendar consultas para um veterinário inativo no sistema.");
+        }
+
         // Validação de Conflito de Horário
         boolean ocupado = agendamentoRepository.existsByVeterinarioAndDataAndHorario(
                 veterinario, dto.data(), dto.horario()
@@ -73,7 +77,13 @@ public class AgendamentoService {
         Usuario veterinario = usuarioRepository.findById(dto.veterinarioId())
                 .orElseThrow(() -> new RuntimeException("Veterinário não encontrado."));
 
+
+        if (!veterinario.isEnabled()) { // ou isEnabled() dependendo do seu UserDetails
+            throw new RuntimeException("Não é permitido agendar consultas para um veterinário inativo no sistema.");
+        }
+
         validarDataEHorario(dto.data(), dto.horario());
+
 
         // Validação de conflito: Verifica se existe outro agendamento (ID diferente) para o mesmo vet/data/hora
         boolean conflito = agendamentoRepository.findAll().stream()

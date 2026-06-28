@@ -17,5 +17,5 @@ public record AgendamentoResponseDTO(
         ) {
     public AgendamentoResponseDTO(Agendamento a) {
         this(a.getId(), a.getData(), a.getHorario(),
-                a.getVeterinario().getNome(), a.getPet().getNome(), a.getStatus(),a.getVeterinario().getId(),a.getPet().getId());
+                a.getVeterinario().getNome(), a.getPet().getNome(), a.getStatus(),a.getPet().getId(),a.getVeterinario().getId());
 }}

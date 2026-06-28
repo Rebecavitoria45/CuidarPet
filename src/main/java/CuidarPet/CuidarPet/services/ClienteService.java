@@ -123,6 +123,19 @@ public class ClienteService {
             throw new RuntimeException("Erro ao realizar a busca: " + e.getMessage());
         }
     }
+    public List<ClienteResponseDTO> listarRecentes() {
+        try {
+            // Busca os 5 do banco
+            List<Cliente> recentes = repository.findTop5ByOrderByDataCriacaoDesc();
+
+            // Converte para DTO
+            return recentes.stream()
+                    .map(ClienteResponseDTO::new)
+                    .toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar clientes recentes");
+        }
+    }
 
     private ClienteResponseDTO converterParaDTO(Cliente c) {
         return new ClienteResponseDTO(c);

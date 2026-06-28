@@ -53,4 +53,10 @@ public class ClienteController {
         List<ClienteResponseDTO> resultados = service.buscarClientesPorNome(nome);
         return ResponseEntity.ok(resultados);
     }
+
+    @GetMapping("/recentes")
+    public ResponseEntity<List<ClienteResponseDTO>> listarRecentes() {
+        List<ClienteResponseDTO> recentes = service.listarRecentes();
+        return ResponseEntity.ok(recentes);
+    }
 }
